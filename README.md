@@ -2,9 +2,9 @@
 
 ## Integrantes:
 
-Gabriel
-Guilherme
-Pedro
+Gabriel Fuentes - 10408876
+Guilherme Florio - 10409698
+Pedro Toma - 10390171
 
 ## Processo de Ideação
 Consideramos a ideia de rastrabilidade de preços, ficamos em dúvida entre 2 nichos: produtos de mercado e produtos eletrônicos.
