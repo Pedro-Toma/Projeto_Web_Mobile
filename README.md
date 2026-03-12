@@ -17,7 +17,7 @@ A proposta é poder facilitar a consulta de produtos, para que as pessoas possam
 ## Imagens do Wireframes
 
 ### Desktop
-<img width="1024" height="487" alt="image" src="https://github.com/user-attachments/assets/0d10175a-70bf-45a4-a931-ccd4b00277b1" />
+<img width="1024" height="487" alt="image" src="https://github.com/user-attachments/assets/9921f288-3476-4719-855e-57b47989bd03" />
 
 ### Mobile
 <img width="775" height="708" alt="image" src="https://github.com/user-attachments/assets/75eca272-1433-4548-b752-b40e38b034bf" />
