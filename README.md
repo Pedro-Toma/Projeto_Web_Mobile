@@ -19,5 +19,52 @@ A proposta é poder facilitar a consulta de produtos, para que as pessoas possam
 ### Desktop
 <img width="1024" height="487" alt="image" src="https://github.com/user-attachments/assets/9921f288-3476-4719-855e-57b47989bd03" />
 
+##### Home Page - HTML
+
+
+Criação de header com placeholder para logo "Lista Barata", localização e barra de pesquisa.
+``` Header
+<header>
+  <h3> Lista Barata </h3>
+  <i class="fa solid fa-location-dot"></i>
+  <h3> São Paulo </h3>
+  <div id="Pesquisa">
+    <i class="fa fa-search icon"></i>
+    <input type="text" placeholder="Pesquisar...">
+  </div>
+</header>
+```
+
+Criação de seção de categorias, produtos e botão de adicionar itens à "Minha Lista".
+``` Main
+<main> 
+  <section>
+    <article>Produtos </article>
+    <span> Categorias </span>
+    <span> Categorias </span>
+    <span> Categorias </span>
+    <span> Categorias </span>
+    <span> Categorias </span>
+    <span> Categorias </span>
+    <span> Categorias </span>
+  </section>
+  <section>
+    <span> Produtos </span>
+    <span> Produtos </span>
+    <span> Produtos </span>
+    <span> Produtos </span>
+    <span> Produtos </span>
+    <span> Produtos </span>
+    <span> Produtos </span>
+  </section>
+  <article>Minha Lista </article>
+  <button style="margin-left: px;">Adicinoa Itens na Lista</button>    
+</main>
+```
+
+Link para imagem de localização.
+``` 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+```
 ### Mobile
 <img width="775" height="708" alt="image" src="https://github.com/user-attachments/assets/75eca272-1433-4548-b752-b40e38b034bf" />
