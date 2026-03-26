@@ -1,78 +1,145 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <link rel="stylesheet" href="cssReset.css">
-    <link rel="stylesheet" href="style.css">
-    <title>ListaBarata</title>
-</head>
-<body>
-    <header>
-        <h3> Lista Barata </h3>
-        <i class="fa solid fa-location-dot"></i>
-        <h3> São Paulo </h3>
-        <div id="Pesquisa">
-            <i class="fa fa-search icon"></i>
-            <input type="text" placeholder="Pesquisar...">
-        </div>
-    </header>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+        <link rel="stylesheet" href="cssReset.css">
+        <link rel="stylesheet" href="style.css">
+        <title>ListaBarata</title>
+    </head>
+    <body>
+        <header>
+            <h3> Lista Barata </h3>
+            <i class="fa solid fa-location-dot"></i>
+            <h3> São Paulo </h3>
+            <div id="Pesquisa">
+                <i class="fa fa-search icon"></i>
+                <input type="text" placeholder="Pesquisar...">
+            </div>
+        </header>
 
-    <main>
-        <article>Produtos Mais Populares</article>
-        <section class="categories">
-           <span> Categorias </span>
-           <span> Categorias </span>
-           <span> Categorias </span>
-           <span> Categorias </span>
-           <span> Categorias </span>
-           <span> Categorias </span>
-           <span> Categorias </span>
-        </section>
+        <main>
+            <article>Produtos Mais Populares</article>
+            <section class="categorias">
+                <span> Higiene e Perfumaria </span>
+                <span> Salgadinhos e Snacks </span>
+                <span> Padaria e Matinais </span>
+                <span> Energéticos e Isotônicos </span>
+                <span> Doces </span>
+            </section>
 
+            <section class="produtos">
+                <span class="produto"> 
+                    <img src="imagens-produtos\coca.jpg">
+                    <p> Coca-Cola </p>
+                    <p> R$ 5,00 </p>
+                    <button class="adicionar" data-nome="Coca-Cola" data-preco="5,00" data-imagem="imagens-produtos\coca.jpg">&plus;</button>
+                </span>
+                <span class="produto"> 
+                    <img src="imagens-produtos\kinder-ovo.avif">
+                    <p> Chocolate Kinder Joy 20g </p>
+                    <p> R$ 8,99 </p>
+                    <button class="adicionar" data-nome="Chocolate Kinder Joy 20g" data-preco="8,99" data-imagem="imagens-produtos\kinder-ovo.avif">&plus;</button>
+                </span>
+                <span class="produto"> 
+                    <img src="imagens-produtos\leite-parmalat.avif">
+                    <p> Leite Parmalat </p>
+                    <p> R$ 5,49 </p>
+                    <button class="adicionar" data-nome="Leite Parmalat" data-preco="5,49" data-imagem="imagens-produtos\leite-parmalat.avif">&plus;</button>
+                </span>
+                <span class="produto"> 
+                    <img src="imagens-produtos\monster-branco.avif">
+                    <p> Monster Branco </p>
+                    <p> R$ 8,69 </p>
+                    <button class="adicionar" data-nome="Monster Branco" data-preco="8,69" data-imagem="imagens-produtos\monster-branco.avif">&plus;</button>
+                </span>
+                <span class="produto"> 
+                    <img src="imagens-produtos\sabonete-dove.avif">
+                    <p> Sabonete Dove </p>
+                    <p> R$ 3,99 </p>
+                    <button class="adicionar" data-nome="Sabonete Dove" data-preco="3,99" data-imagem="imagens-produtos\sabonete-dove.avif">&plus;</button>
+                </span>
+                <span class="produto"> 
+                    <img src="imagens-produtos\bis.avif">
+                    <p> Bis </p>
+                    <p> R$ 7,99 </p>
+                    <button class="adicionar" data-nome="Bis" data-preco="7,99" data-imagem="imagens-produtos\bis.avif">&plus;</button>
+                </span>
+                <span class="produto"> 
+                    <img src="imagens-produtos\barra-nutry.avif">
+                    <p> Barra Cereal Nutry </p>
+                    <p> R$ 1,38 </p>
+                    <button class="adicionar" data-nome="Barra Cereal Nutry" data-preco="1,38" data-imagem="imagens-produtos\barra-nutry.avif">&plus;</button>
+                </span>
+            </section>
+            <article>Minha Lista</article>
+            <!-- <button class="adicionar-itens">Adicione Itens na Lista</button> -->
+            <div id="lista-container">
+                <p class="vazio">Adicione Itens à Lista...</p>
+            </div>
+        </main>
+    </body>
+    <script>
+        let minhaLista = [];
 
-        <section class="products">
-            <span class="product"> 
-                <img src="https://andinacocacola.vtexassets.com/arquivos/ids/157652-100-auto?v=638404083624500000&width=100&height=auto&aspect=true">
-                <p> Coca-Cola </p>
-                <p> R$ 5,00 </p>
-            </span>
-            <span class="product"> 
-                <img src="https://andinacocacola.vtexassets.com/arquivos/ids/157652-100-auto?v=638404083624500000&width=100&height=auto&aspect=true">
-                <p> Coca-Cola </p>
-            </span>
-            <span class="product"> 
-                <img src="https://andinacocacola.vtexassets.com/arquivos/ids/157652-100-auto?v=638404083624500000&width=100&height=auto&aspect=true">
-                <p> Coca-Cola </p>
-            </span>
-            <span class="product"> 
-                <img src="https://andinacocacola.vtexassets.com/arquivos/ids/157652-100-auto?v=638404083624500000&width=100&height=auto&aspect=true">
-                <p> Coca-Cola </p>
-            </span>
-            <span class="product"> 
-                <img src="https://andinacocacola.vtexassets.com/arquivos/ids/157652-100-auto?v=638404083624500000&width=100&height=auto&aspect=true">
-                <p> Coca-Cola </p>
-            </span>
-            <span class="product"> 
-                <img src="https://andinacocacola.vtexassets.com/arquivos/ids/157652-100-auto?v=638404083624500000&width=100&height=auto&aspect=true">
-                <p> Coca-Cola </p>
-            </span>
-            <span class="product"> 
-                <img src="https://andinacocacola.vtexassets.com/arquivos/ids/157652-100-auto?v=638404083624500000&width=100&height=auto&aspect=true">
-                <p> Coca-Cola </p>
-            </span>
-        </section>
+        const botoesAdicionar = document.querySelectorAll('.adicionar');
 
-        
-            <article>Minha Lista </article>
-        
+        botoesAdicionar.forEach(botao => {
+            botao.addEventListener('click', function() {
+                const nomeProduto = this.getAttribute('data-nome');
+                const precoProduto = this.getAttribute('data-preco');
+                const imagemProduto = this.getAttribute('data-imagem');
 
-         
-            <button class="add-itens">Adicione Itens na Lista</button>
-         
-    </main>
+                const produto = {
+                    nome: nomeProduto,
+                    preco: precoProduto,
+                    imagem: imagemProduto,
+                };
 
+                adicionarNaLista(produto);
+            });
+        });
 
-</body>
+        function adicionarNaLista(produto) {
+            const itemAdicionado = minhaLista.some((produtoLista) => produtoLista.nome === produto.nome);
+
+            if (itemAdicionado) {
+                alert(`Produto: ${produto.nome} já adicionado!`)
+                return
+            }
+            minhaLista.push(produto);
+            console.log("Item adicionado:", produto);
+            console.log("Lista completa:", minhaLista);
+            renderizarLista();
+        }
+
+        function removerDaLista(indice) {
+            minhaLista.splice(indice,1);
+            console.log("Lista completa:", minhaLista);
+            renderizarLista();
+        }
+
+        function renderizarLista() {
+            const container = document.getElementById('lista-container');
+            
+            container.innerHTML = "";
+            
+            if (minhaLista.length === 0) {
+                container.innerHTML = '<p class="vazio">Adicione Itens à Lista......</p>';
+            } else {
+                minhaLista.forEach((produto, indice) => {
+                    const itemHTML = `
+                        <span class="produto"> 
+                            <img src="${produto.imagem}">
+                            <p> ${produto.nome} </p>
+                            <p> R$ ${produto.preco} </p>
+                            <button class="remover" data-nome="${produto.nome}" data-preco="${produto.preco}" onclick="removerDaLista(${indice})">&minus;</button>
+                        </span>
+                    `;
+                    container.innerHTML += itemHTML;
+                });
+            }
+        }
+    </script>
 </html>
