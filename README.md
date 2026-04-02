@@ -251,6 +251,78 @@ function gerarMercadosDoProduto(nome) {
 }
 ~~~
 
+Renderização da página de mercado
+~~~js
+function renderizarPaginaMercado(nomeMercado) {
+    const main = document.querySelector('.conteudo');
+
+    // Encontra os dados do mercado clicado
+    const mercado = mercados.find(m => m.nome === nomeMercado);
+
+    if (!mercado) {
+        alert("Mercado Não Encontrado");
+        return;
+    }
+
+    // Busca todos os produtos que possuem uma oferta neste mercado específico
+    let produtosNesteMercado = [];
+    
+    produtos.forEach(produto => {
+        const ofertaNoMercado = produto.ofertas.find(oferta => oferta.loja === nomeMercado);
+        
+        if (ofertaNoMercado) {
+            // Criamos uma cópia do produto para não alterar o preço global,
+            // definindo o preço específico que este mercado cobra.
+            produtosNesteMercado.push({
+                ...produto,
+                precoLocal: ofertaNoMercado.preco 
+            });
+        }
+    });
+
+    // Renderiza a tela
+    main.innerHTML = `
+        <section class="pagina-detalhes">
+            <button onclick="renderizarHome()" class="voltar">
+                Home <i class="fa-solid fa-chevron-right"></i> ${mercado.nome}
+            </button>
+            <section class="pagina-mercado">
+            <img src="${mercado.imagem}">   
+            <section class="lista-produtos">
+                ${gerarCardsProdutosLocal(produtosNesteMercado)}
+            </section>
+        </section>
+        <h1>${mercado.nome}</h1>
+        <p>${mercado.endereco}</p>
+    `;
+
+    // Ativa os botões de adicionar na lista para esta nova tela
+    configurarBotoesAdicionar('.adicionar-mercado-local');
+}
+~~~
+
+Geração de produtos do mercado específico
+~~~js
+function gerarCardsProdutosLocal(listaProdutos) {
+    if (listaProdutos.length === 0) return "<p>Nenhum produto cadastrado neste mercado.</p>";
+
+    return listaProdutos.map(produto => `
+        <article class="produto-aba">
+            <img src="${produto.imagem}" onclick="renderizarPaginaProduto(${produto.id})">
+            <section class="produto-conteudo">
+                <p> ${produto.nome} </p>
+                <p class="produto-preco"> R$ ${produto.precoLocal.toFixed(2).replace('.', ',')} </p>
+            </section>
+            <button class="adicionar-mercado-local" 
+                data-nome="${produto.nome}" 
+                data-preco="${produto.precoLocal}" 
+                data-imagem="${produto.imagem}">&plus;
+            </button>
+        </article>
+    `).join('');
+}
+~~~
+
 Criação de eventListener para monitorar a adição do produto na lista.
 ~~~js
 function configurarBotoesAdicionar(seletor) {
@@ -658,7 +730,6 @@ Lista de produtos (seção).
     padding-bottom: 10px;
     cursor: pointer;
     border: 1px solid rgb(76, 108, 249);
-    box-shadow: 2px 2px 2px rgb(8, 53, 254);
     position: relative;
 }
 
@@ -761,6 +832,7 @@ Seção de Mercados - Lista de Mercados.
 ~~~
 
 ##### Página do Produto
+
 ~~~css
 .pagina-detalhes {
     display: flex;
@@ -882,6 +954,81 @@ Botão de adicionar a lista dentro da página do produto.
 }
 
 .adicionar-produto:hover {
+    opacity: 0.8;
+}
+~~~
+
+##### Página de Mercado
+
+~~~css
+.pagina-mercado {
+    display: flex;
+}
+~~~
+
+Imagem e lista de produtos.
+~~~css
+.pagina-mercado > img {
+    border: 2px solid black;
+    max-height: 400px;
+    object-fit: contain;
+    max-width: 400px;
+    padding: 10px;
+    border-radius: 16px;
+}
+
+.lista-produtos {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    margin-left: 100px;
+    width: calc(25vw - 55px);
+}
+~~~
+
+Imagem e informações do produto (card)
+~~~css
+.produto-aba {
+    margin: 0px 20px;
+    margin-bottom: 40px;
+    padding: 10px 12px;
+    height: 100px;
+    width: 800px;
+    max-width: calc(60vw - 55px);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    background-color: rgba(76, 108, 249, 0.8);
+    color: white;
+    box-shadow: 3px 4px 2px rgb(76, 108, 249);
+    position: relative;
+}
+
+.produto-aba img {
+    height: 80px;
+    width: 80px;
+    margin-right: 20px;
+    border-radius: 16px;
+    padding: 10px;
+    background-color: white;
+    object-fit: contain;
+}
+~~~
+
+Botão de adicionar produto à lista.
+~~~css
+.adicionar-mercado-local {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    border: none;
+    background-color: white;
+    height: 32px;
+    width: 32px;
+    border-radius: 6px;
+}
+
+.adicionar-mercado-local:hover {
     opacity: 0.8;
 }
 ~~~
