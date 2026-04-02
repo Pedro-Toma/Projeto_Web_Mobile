@@ -208,6 +208,32 @@ function renderizarPaginaProduto(id) {
     configurarBotoesAdicionar('.adicionar-produto');
 }
 
+// Gerar lista de mercados onde o produto esta disponível
+
+function gerarMercadosDoProduto(nome) {
+
+    const produto = produtos.find((p) => p.nome === nome);
+
+    if (!produto || !produto.ofertas) {
+        return "<p>Nenhuma oferta encontrada.</p>"
+    };
+    
+    return produto.ofertas.map(oferta => `
+        <article class="produto-mercado">
+            <img src="${oferta.mercado}">
+            <div class="produto-conteudo">
+                <p> Endereço: ${oferta.endereco} </p>
+                <p class="produto-preco"> R$ ${oferta.preco.toFixed(2).replace('.', ',')}</p>
+            </div>
+            <button class="adicionar-produto"
+                data-nome="${produto.nome}" 
+                data-preco="${oferta.preco}" 
+                data-imagem="${produto.imagem}">&plus;
+            </button>
+        </article>
+    `).join('');
+}
+
 // Renderizar Página do Mercado Específico
 function renderizarPaginaMercado(nomeMercado) {
     const main = document.querySelector('.conteudo');
@@ -270,32 +296,6 @@ function gerarCardsProdutosLocal(listaProdutos) {
             <button class="adicionar-mercado-local" 
                 data-nome="${produto.nome}" 
                 data-preco="${produto.precoLocal}" 
-                data-imagem="${produto.imagem}">&plus;
-            </button>
-        </article>
-    `).join('');
-}
-
-// Gerar lista de mercados onde o produto esta disponível
-
-function gerarMercadosDoProduto(nome) {
-
-    const produto = produtos.find((p) => p.nome === nome);
-
-    if (!produto || !produto.ofertas) {
-        return "<p>Nenhuma oferta encontrada.</p>"
-    };
-    
-    return produto.ofertas.map(oferta => `
-        <article class="produto-mercado">
-            <img src="${oferta.mercado}">
-            <div class="produto-conteudo">
-                <p> Endereço: ${oferta.endereco} </p>
-                <p class="produto-preco"> R$ ${oferta.preco.toFixed(2).replace('.', ',')}</p>
-            </div>
-            <button class="adicionar-produto"
-                data-nome="${produto.nome}" 
-                data-preco="${oferta.preco}" 
                 data-imagem="${produto.imagem}">&plus;
             </button>
         </article>
