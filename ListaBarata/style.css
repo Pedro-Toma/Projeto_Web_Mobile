@@ -1,14 +1,12 @@
 /* Base da página */
 
 html{
-    height: 100%;
     width: 100%;
 }
 
 body {
     font-family: Arial;
     padding-top: 55px;
-    height: 90%;
     width: 100%;
     display: flex;
     position: relative;
@@ -276,6 +274,34 @@ li.filtro-ativo {
     font-size: 20px;
 }
 
+.produto-aba {
+    margin: 0px 20px;
+    margin-bottom: 40px;
+    padding: 10px 12px;
+    height: 100px;
+    width: 800px;
+    max-width: calc(60vw - 55px);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    background-color: rgba(76, 108, 249, 0.8);
+    color: white;
+    box-shadow: 3px 4px 2px rgb(76, 108, 249);
+    position: relative;
+}
+
+/* Imagem e informações */
+
+.produto-aba img {
+    height: 80px;
+    width: 80px;
+    margin-right: 20px;
+    border-radius: 16px;
+    padding: 10px;
+    background-color: white;
+    object-fit: contain;
+}
+
 /* Botão para adicionar a lista (barra lateral) */
 
 .adicionar-home {
@@ -321,7 +347,7 @@ li.filtro-ativo {
     margin-right: 14px;
     cursor: pointer;
     margin-top: 14px;
-    margin-left: 14px;
+    margin-left: 25px;
 }
 
 
@@ -330,9 +356,9 @@ li.filtro-ativo {
     width: 120px;
     height: 100px;
     object-fit: contain;
-    border-radius: 90px;
+    border-radius: 30px;
     background-color: rgb(255, 255, 255);
-    padding: 10px 0px;
+    padding: 20px 10px;
     box-shadow: 0px 0px 16px rgb(76, 108, 249);
     margin-bottom: 20px;
 }
@@ -464,5 +490,43 @@ li.filtro-ativo {
 }
 
 .adicionar-produto:hover {
+    opacity: 0.8;
+}
+
+.pagina-mercado {
+    display: flex;
+}
+
+/* Imagem */
+
+.pagina-mercado > img {
+    border: 2px solid black;
+    max-height: 400px;
+    object-fit: contain;
+    max-width: 400px;
+    padding: 10px;
+    border-radius: 16px;
+}
+
+.lista-produtos {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    margin-left: 100px;
+    width: calc(25vw - 55px);
+}
+
+.adicionar-mercado-local {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    border: none;
+    background-color: white;
+    height: 32px;
+    width: 32px;
+    border-radius: 6px;
+}
+
+.adicionar-mercado-local:hover {
     opacity: 0.8;
 }
