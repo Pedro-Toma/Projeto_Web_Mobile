@@ -274,34 +274,6 @@ li.filtro-ativo {
     font-size: 20px;
 }
 
-.produto-aba {
-    margin: 0px 20px;
-    margin-bottom: 40px;
-    padding: 10px 12px;
-    height: 100px;
-    width: 800px;
-    max-width: calc(60vw - 55px);
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    background-color: rgba(76, 108, 249, 0.8);
-    color: white;
-    box-shadow: 3px 4px 2px rgb(76, 108, 249);
-    position: relative;
-}
-
-/* Imagem e informações */
-
-.produto-aba img {
-    height: 80px;
-    width: 80px;
-    margin-right: 20px;
-    border-radius: 16px;
-    padding: 10px;
-    background-color: white;
-    object-fit: contain;
-}
-
 /* Botão para adicionar a lista (barra lateral) */
 
 .adicionar-home {
@@ -493,6 +465,8 @@ li.filtro-ativo {
     opacity: 0.8;
 }
 
+/* Página de Mercado */
+
 .pagina-mercado {
     display: flex;
 }
@@ -515,6 +489,36 @@ li.filtro-ativo {
     margin-left: 100px;
     width: calc(25vw - 55px);
 }
+
+/* Imagem e informações do produto */
+
+.produto-aba {
+    margin: 0px 20px;
+    margin-bottom: 40px;
+    padding: 10px 12px;
+    height: 100px;
+    width: 800px;
+    max-width: calc(60vw - 55px);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    background-color: rgba(76, 108, 249, 0.8);
+    color: white;
+    box-shadow: 3px 4px 2px rgb(76, 108, 249);
+    position: relative;
+}
+
+.produto-aba img {
+    height: 80px;
+    width: 80px;
+    margin-right: 20px;
+    border-radius: 16px;
+    padding: 10px;
+    background-color: white;
+    object-fit: contain;
+}
+
+/* Adição de produto do mercado específico */
 
 .adicionar-mercado-local {
     position: absolute;
