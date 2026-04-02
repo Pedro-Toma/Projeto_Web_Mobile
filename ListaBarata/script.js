@@ -73,7 +73,7 @@ const produtos = [
             { loja: "Extra", preco: 1.55, mercado: "imagens-mercados/extra.png", endereco: "Av. Gen. Olímpio da Silveira, 414 - Barra Funda" },
             { loja: "Assaí Atacadista", preco: 1.38, mercado: "imagens-mercados/assai.png", endereco: "R. James Holland, 668" }
         ]
-    }
+    },
 ];
 
 const mercados = [];
@@ -170,7 +170,7 @@ function gerarCardsProdutos(categoriaFiltro = "Todos") {
 
 function gerarCardsMercados() {
     return mercados.map(mercado => `
-        <article class="mercado">
+        <article class="mercado" onclick="renderizarPaginaMercado('${mercado.nome}')">
             <img src="${mercado.imagem}">
             <p> ${mercado.nome} </p>
             <p> ${mercado.endereco} </p>
@@ -206,6 +206,74 @@ function renderizarPaginaProduto(id) {
     `;
 
     configurarBotoesAdicionar('.adicionar-produto');
+}
+
+// Renderizar Página do Mercado Específico
+function renderizarPaginaMercado(nomeMercado) {
+    const main = document.querySelector('.conteudo');
+
+    // Encontra os dados do mercado clicado
+    const mercado = mercados.find(m => m.nome === nomeMercado);
+
+    if (!mercado) {
+        alert("Mercado Não Encontrado");
+        return;
+    }
+
+    // Busca todos os produtos que possuem uma oferta neste mercado específico
+    let produtosNesteMercado = [];
+    
+    produtos.forEach(produto => {
+        const ofertaNoMercado = produto.ofertas.find(oferta => oferta.loja === nomeMercado);
+        
+        if (ofertaNoMercado) {
+            // Criamos uma cópia do produto para não alterar o preço global,
+            // definindo o preço específico que este mercado cobra.
+            produtosNesteMercado.push({
+                ...produto,
+                precoLocal: ofertaNoMercado.preco 
+            });
+        }
+    });
+
+    // Renderiza a tela
+    main.innerHTML = `
+        <section class="pagina-detalhes">
+            <button onclick="renderizarHome()" class="voltar">
+                Home <i class="fa-solid fa-chevron-right"></i> ${mercado.nome}
+            </button>
+            <section class="pagina-mercado">
+            <img src="${mercado.imagem}">   
+            <section class="lista-produtos">
+                ${gerarCardsProdutosLocal(produtosNesteMercado)}
+            </section>
+        </section>
+        <h1>${mercado.nome}</h1>
+        <p>${mercado.endereco}</p>
+    `;
+
+    // Ativa os botões de adicionar na lista para esta nova tela
+    configurarBotoesAdicionar('.adicionar-mercado-local');
+}
+
+// Gerar cards de produtos para a página de um mercado específico
+function gerarCardsProdutosLocal(listaProdutos) {
+    if (listaProdutos.length === 0) return "<p>Nenhum produto cadastrado neste mercado.</p>";
+
+    return listaProdutos.map(produto => `
+        <article class="produto-aba">
+            <img src="${produto.imagem}" onclick="renderizarPaginaProduto(${produto.id})">
+            <section class="produto-conteudo">
+                <p> ${produto.nome} </p>
+                <p class="produto-preco"> R$ ${produto.precoLocal.toFixed(2).replace('.', ',')} </p>
+            </section>
+            <button class="adicionar-mercado-local" 
+                data-nome="${produto.nome}" 
+                data-preco="${produto.precoLocal}" 
+                data-imagem="${produto.imagem}">&plus;
+            </button>
+        </article>
+    `).join('');
 }
 
 // Gerar lista de mercados onde o produto esta disponível
