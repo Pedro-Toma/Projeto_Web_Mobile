@@ -809,7 +809,7 @@ Seção de Mercados - Lista de Mercados.
     margin-right: 14px;
     cursor: pointer;
     margin-top: 14px;
-    margin-left: 14px;
+    margin-left: 25px;
 }
 
 .mercado img{
@@ -817,9 +817,9 @@ Seção de Mercados - Lista de Mercados.
     width: 120px;
     height: 100px;
     object-fit: contain;
-    border-radius: 90px;
+    border-radius: 30px;
     background-color: rgb(255, 255, 255);
-    padding: 10px 0px;
+    padding: 20px 10px;
     box-shadow: 0px 0px 16px rgb(76, 108, 249);
     margin-bottom: 20px;
 }
