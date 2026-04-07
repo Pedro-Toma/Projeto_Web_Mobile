@@ -2,9 +2,9 @@
 
 ## Integrantes:
 
-Gabriel Fuentes - 10408876
-Guilherme Florio - 10409698
-Pedro Toma - 10390171
+Gabriel Fuentes - 10408876  
+Guilherme Florio - 10409698  
+Pedro Toma - 10390171  
 
 ## Processo de Ideação
 Consideramos a ideia de rastreabilidade de preços, ficamos em dúvida entre 2 nichos: produtos de mercado e produtos eletrônicos.
@@ -14,19 +14,40 @@ Optamos por abordar os produtos de mercado, porque preferimos abordar um públic
 ## Caráter Extensionista
 A proposta é poder facilitar a consulta de produtos, para que as pessoas possam economizar nas suas compras e tomar uma decisão mais eficiente com relação ao local, podendo escolher um lugar mais próximo a sua casa, sem perder um desconto ou valor.
 
-## Imagens do Wireframes
+## Imagens dos Wireframes
 
 ### Desktop
-<img width="1381" height="378" alt="image" src="https://github.com/user-attachments/assets/09929f48-9b7c-4643-9499-0fe8fc526772" />
+#### Página Incial (Seção de "Produtos Mais Populares" e seção de "Mercados")
+<img width="1083" height="630" alt="image" src="https://github.com/user-attachments/assets/89555e8c-a491-434e-bf2a-89ac77f2268e" />
+
+#### Página de Produto (Lista de mercados onde o produto está disponível)
+<img width="1082" height="627" alt="image" src="https://github.com/user-attachments/assets/8cf2834f-8418-4b98-b90e-7588b3857bbc" />
+
+#### Página de Mercado (Lista de produtos disponíveis no mercado)
+<img width="1081" height="633" alt="image" src="https://github.com/user-attachments/assets/3f8a6cbe-8176-41f1-be37-4600ac68ddf0" />
+
+#### Seção Lateral (Lista de produtos adicionados pelo usuário)
+<img width="1083" height="629" alt="image" src="https://github.com/user-attachments/assets/07ecc994-2a40-44fb-9c8c-76067a1a4fb7" />
 
 ### Mobile
-<img width="424" height="370" alt="image" src="https://github.com/user-attachments/assets/7fecfcc0-7426-42c9-a855-033ea19de2ec" />
+
+#### Página Incial
+<img width="330" height="711" alt="image" src="https://github.com/user-attachments/assets/cf339015-77f6-4437-93e2-ef8c11cdf80a" />
+
+#### Página de Produto
+<img width="326" height="713" alt="image" src="https://github.com/user-attachments/assets/0d031a2c-900e-449c-9f39-85d960ca032c" />
+
+#### Página de Mercado
+<img width="320" height="717" alt="image" src="https://github.com/user-attachments/assets/65c1db79-b83b-4b1b-8142-fcebc0a5cccf" />
+
+#### Modal (Posição da lista modificada para versão mobile)
+<img width="322" height="711" alt="image" src="https://github.com/user-attachments/assets/cd17ccd1-7e17-492c-ae9f-35950dd04b25" />
 
 ##### Sobre o Desenvolvimento
 
 Optamos por utilizar uma estrutura html única e alterar apenas o conteúdo renderizado na tela, seguindo o modelo Single Page Application (SPA).
 
-##### HTML
+### HTML
 
 Link para imagem de localização.
 ~~~html
@@ -45,11 +66,19 @@ Criação de header com placeholder para logo "Lista Barata", localização e ba
   <h3> Lista Barata </h3>
   <i class="fa solid fa-location-dot"></i>
   <h3> São Paulo </h3>
-  <div id="Pesquisa">
+  <form id="Pesquisa" class="pesquisa-desktop">
     <i class="fa fa-search icon"></i>
     <input type="text" placeholder="Pesquisar...">
-  </div>
+  </form>
 </header>
+~~~
+
+Criação de barra de pesquisa para a versão mobile.
+~~~html
+<form id="Pesquisa-Mobile" class="pesquisa-mobile">
+  <i class="fa fa-search icon"></i>
+  <input type="text" placeholder="Pesquisar...">
+</form>
 ~~~
 
 Criação seção main para adicionar conteúdo via JS.
@@ -61,7 +90,10 @@ Criação seção main para adicionar conteúdo via JS.
 Seção de barra lateral fixa para lista de itens
 ~~~html
 <aside class="secao-lateral">
-  <button>Lista</button>
+  <button id="toggle-lista"> 
+    <i class="fa-solid fa-chevron-left"></i> 
+    Lista
+  </button>
   <section class="lista">
     <ul id="lista-itens">
     </ul>
@@ -72,7 +104,7 @@ Seção de barra lateral fixa para lista de itens
 </aside>
 ~~~
 
-##### JavaScript (Single Page Application - injeção HTML)
+### JavaScript (Single Page Application - injeção HTML)
 
 Lista de produtos (objetos).
 ~~~js
@@ -121,21 +153,12 @@ produtos.forEach((p) => {
 Renderizar a página Home, com lista de produtos e lista de mercados.
 ~~~js
 function renderizarHome() {
+    mostrarPesquisa(true);
     const main = document.querySelector('.conteudo');
-    document.getElementById('Pesquisa').style.display = 'visible';
 
     main.innerHTML = `
         <article class="titulo">Produtos Mais Populares</article>
-        <section class="categorias">
-            <ul id="categorias-filtros">
-                <li data-categoria="Higiene e Perfumaria"> Higiene e Perfumaria </li>
-                <li data-categoria="Salgadinhos e Snacks"> Salgadinhos e Snacks </li>
-                <li data-categoria="Padaria e Matinais"> Padaria e Matinais </li>
-                <li data-categoria="Bebidas"> Bebidas </li>
-                <li data-categoria="Energéticos e Isotônicos"> Energéticos e Isotônicos </li>
-                <li data-categoria="Doces"> Doces </li>
-            </ul>
-        </section>
+        ${gerarCategorias()} 
         <section class="produtos">
             ${gerarCardsProdutos()} 
         </section>
@@ -151,11 +174,42 @@ function renderizarHome() {
 }
 ~~~
 
+Gerar categorias dos produtos.
+~~~js
+function gerarCategorias() {
+    return `
+        <section class="categorias-desktop">
+            <ul id="categorias-filtros">
+                <li data-categoria="Todos"> Todos </li>
+                <li data-categoria="Higiene e Perfumaria"> Higiene e Perfumaria </li>
+                <li data-categoria="Salgadinhos e Snacks"> Salgadinhos e Snacks </li>
+                <li data-categoria="Padaria e Matinais"> Padaria e Matinais </li>
+                <li data-categoria="Bebidas"> Bebidas </li>
+                <li data-categoria="Energéticos e Isotônicos"> Energéticos e Isotônicos </li>
+                <li data-categoria="Doces"> Doces </li>
+            </ul>
+        </section>
+        <section class="categorias-mobile">
+            <select id="filtros-mobile">
+                <option value="Todos" selected>Todos</option>
+                <option value="Higiene e Perfumaria">Higiene e Perfumaria</option>
+                <option value="Salgadinhos e Snacks">Salgadinhos e Snacks</option>
+                <option value="Padaria e Matinais">Padaria e Matinais</option>
+                <option value="Bebidas">Bebidas</option>
+                <option value="Energéticos e Isotônicos">Energéticos e Isotônicos</option>
+                <option value="Doces">Doces</option>
+            </select>
+        </section>
+    `;
+}
+~~~
+
 Geração do html para cada produto dentro da lista filtrada.
 ~~~js
 function gerarCardsProdutos(categoriaFiltro = "Todos") {
 
-    let listaFiltrada = produtos;
+    let listaParaFiltrar = (listaBase !== null) ? listaBase : produtos;
+    let listaFiltrada = listaParaFiltrar;
 
     if (categoriaFiltro !== "Todos") {
         listaFiltrada = produtos.filter(p => p.categoria === categoriaFiltro);
@@ -196,6 +250,7 @@ function gerarCardsMercados() {
 Renderizar a página de produto, com nome, imagem e lista de mercados com o produto disponível.
 ~~~js
 function renderizarPaginaProduto(id) {
+    mostrarPesquisa(false);
     const main = document.querySelector('.conteudo');
 
     const produto = produtos.find(p => p.id === id);
@@ -208,11 +263,13 @@ function renderizarPaginaProduto(id) {
     main.innerHTML = `
         <section class="pagina-detalhes">
             <button onclick="renderizarHome()" class="voltar">
-                Home <i class="fa-solid fa-chevron-right"></i> ${produto.nome}
+                <span class="link-home">Home</span> <i class="fa-solid fa-chevron-right"></i> ${produto.nome}
             </button>
             <h1>${produto.nome}</h1>
             <section class="pagina-produto">
-                <img src="${produto.imagem}">
+                <div class="imagem-produto">
+                    <img src="${produto.imagem}">
+                </div>
                 <section class="lista-mercados">
                     ${gerarMercadosDoProduto(produto.nome)}
                 </section>
@@ -254,9 +311,10 @@ function gerarMercadosDoProduto(nome) {
 Renderização da página de mercado
 ~~~js
 function renderizarPaginaMercado(nomeMercado) {
+
+    mostrarPesquisa(true);
     const main = document.querySelector('.conteudo');
 
-    // Encontra os dados do mercado clicado
     const mercado = mercados.find(m => m.nome === nomeMercado);
 
     if (!mercado) {
@@ -264,15 +322,12 @@ function renderizarPaginaMercado(nomeMercado) {
         return;
     }
 
-    // Busca todos os produtos que possuem uma oferta neste mercado específico
     let produtosNesteMercado = [];
     
     produtos.forEach(produto => {
         const ofertaNoMercado = produto.ofertas.find(oferta => oferta.loja === nomeMercado);
         
         if (ofertaNoMercado) {
-            // Criamos uma cópia do produto para não alterar o preço global,
-            // definindo o preço específico que este mercado cobra.
             produtosNesteMercado.push({
                 ...produto,
                 precoLocal: ofertaNoMercado.preco 
@@ -284,43 +339,44 @@ function renderizarPaginaMercado(nomeMercado) {
     main.innerHTML = `
         <section class="pagina-detalhes">
             <button onclick="renderizarHome()" class="voltar">
-                Home <i class="fa-solid fa-chevron-right"></i> ${mercado.nome}
+                <span class="link-home">Home</span> <i class="fa-solid fa-chevron-right"></i> ${mercado.nome}
             </button>
             <section class="pagina-mercado">
-            <img src="${mercado.imagem}">   
-            <section class="lista-produtos">
-                ${gerarCardsProdutosLocal(produtosNesteMercado)}
+                <section class="info-mercado">
+                    <div class="imagem-mercado">
+                        <img src="${mercado.imagem}">
+                    </div>
+                    <h1>${mercado.nome}</h1>
+                    <p>${mercado.endereco}</p>
+                </section>
+                <section class="produtos-mercado">
+                    <article class="titulo">Produtos Mais Populares</article>
+                    ${gerarCategorias()} 
+                    <section class="produtos">
+                        ${gerarCardsProdutos("Todos", produtosNesteMercado)} 
+                    </section>
+                </section>
             </section>
         </section>
-        <h1>${mercado.nome}</h1>
-        <p>${mercado.endereco}</p>
     `;
 
-    // Ativa os botões de adicionar na lista para esta nova tela
     configurarBotoesAdicionar('.adicionar-mercado-local');
+    configurarFiltros(produtosNesteMercado);
+    renderizarLista();
 }
 ~~~
 
-Geração de produtos do mercado específico
+Alteração da barra de pesquisa para cada versão.
 ~~~js
-function gerarCardsProdutosLocal(listaProdutos) {
-    if (listaProdutos.length === 0) return "<p>Nenhum produto cadastrado neste mercado.</p>";
+function mostrarPesquisa(exibir) {
+    const pesquisaDesktop = document.getElementById('Pesquisa');
+    const pesquisaMobile = document.getElementById('Pesquisa-Mobile');
+    const estilo = exibir ? '' : 'none';
 
-    return listaProdutos.map(produto => `
-        <article class="produto-aba">
-            <img src="${produto.imagem}" onclick="renderizarPaginaProduto(${produto.id})">
-            <section class="produto-conteudo">
-                <p> ${produto.nome} </p>
-                <p class="produto-preco"> R$ ${produto.precoLocal.toFixed(2).replace('.', ',')} </p>
-            </section>
-            <button class="adicionar-mercado-local" 
-                data-nome="${produto.nome}" 
-                data-preco="${produto.precoLocal}" 
-                data-imagem="${produto.imagem}">&plus;
-            </button>
-        </article>
-    `).join('');
+    if (pesquisaDesktop) pesquisaDesktop.style.display = estilo;
+    if (pesquisaMobile) pesquisaMobile.style.display = estilo;
 }
+
 ~~~
 
 Criação de eventListener para monitorar a adição do produto na lista.
@@ -350,29 +406,52 @@ Filtragem dos produtos dentro da seção de produtos da página Home.
 ~~~js
 function configurarFiltros() {
 
-    const filtros = document.querySelectorAll('#categorias-filtros li');
+    const filtroDesktop = document.querySelectorAll('#categorias-filtros li');
+    const filtroMobile = document.querySelector('#filtros-mobile');
     const containerProdutos = document.querySelector('.produtos');
 
-    filtros.forEach(filtro => {
+    const executarFiltro = (categoria) => {
+        containerProdutos.innerHTML = gerarCardsProdutos(categoria, listaBase);
+        configurarBotoesAdicionar('.adicionar-home');
+        
+        if (filtroMobile) filtroMobile.value = categoria;
+    };
+
+    filtroDesktop.forEach(filtro => {
         filtro.onclick = () => {
 
             const jaAtivo = filtro.classList.contains('filtro-ativo');
-            
             let categoriaFiltro;
 
             if (jaAtivo) {
                 filtro.classList.remove('filtro-ativo');
                 categoriaFiltro = "Todos"; 
             } else {
-                filtros.forEach(f => f.classList.remove('filtro-ativo'));
+                filtroDesktop.forEach(f => f.classList.remove('filtro-ativo'));
                 filtro.classList.add('filtro-ativo');
                 categoriaFiltro = filtro.getAttribute('data-categoria');
             }
-            containerProdutos.innerHTML = gerarCardsProdutos(categoriaFiltro);
-
-            configurarBotoesAdicionar('.adicionar-home');
+            if (filtroMobile) { 
+                filtroMobile.value = categoriaFiltro;
+            }
+            executarFiltro(categoriaFiltro);
         };
     });
+
+    if (filtroMobile) {
+        filtroMobile.onchange = (e) => {
+            const categoriaSelecionada = e.target.value;
+
+            filtroDesktop.forEach(f => {
+                f.classList.remove('filtro-ativo');
+                if(f.getAttribute('data-categoria') === categoriaSelecionada) {
+                    f.classList.add('filtro-ativo');
+                }
+            });
+
+            executarFiltro(categoriaSelecionada);
+        };
+    }
 }
 ~~~
 
@@ -424,11 +503,14 @@ function renderizarLista() {
     
     let somaTotal = 0;
     container.innerHTML = "";
-    
+
     if (minhaLista.length === 0) {
         container.innerHTML = '<p class="vazio">Adicione Itens à Lista......</p>';
         precoTotalElemento.innerHTML = "Total: R$ 0,00";
     } else {
+
+        const fragmento = document.createDocumentFragment();
+
         minhaLista.forEach((produto, indice) => {
 
             const quantidade = produto.quantidade || 1;
@@ -436,22 +518,25 @@ function renderizarLista() {
 
             somaTotal += subtotal;
             
-            const itemHTML = `
-                <li class="produto-lista"> 
-                    <img src="${produto.imagem}">
-                    <article class="produto-info-lista">
-                        <p> ${produto.nome} </p>
-                        <p class-> R$ ${(produto.preco * quantidade).toFixed(2).replace('.', ',')} </p>
-                    </article>
-                    <section class="controle-quantidade">
-                        <button onclick="alterarQuantidade(${indice}, 1)">&plus;</button>
-                        <p> ${quantidade} </p>
-                        <button onclick="alterarQuantidade(${indice}, -1)">&minus;</button>
-                    </section>
-                </li>
-                `;
-            container.innerHTML += itemHTML;
+            const li = document.createElement('li');
+            li.className = 'produto-lista';
+
+            li.innerHTML = `
+                <img src="${produto.imagem}">
+                <article class="produto-info-lista">
+                    <p> ${produto.nome} </p>
+                    <p class-> R$ ${(produto.preco * quantidade).toFixed(2).replace('.', ',')} </p>
+                </article>
+                <section class="controle-quantidade">
+                    <button onclick="alterarQuantidade(${indice}, 1)">&plus;</button>
+                    <p> ${quantidade} </p>
+                    <button onclick="alterarQuantidade(${indice}, -1)">&minus;</button>
+                </section>
+            `;
+            fragmento.appendChild(li);
         });
+        container.appendChild(fragmento);
+        
         precoTotalElemento.innerHTML = `Total: R$ ${somaTotal.toFixed(2).replace('.', ',')}`;
     }
 }
@@ -474,7 +559,16 @@ window.onload = () => {
 };
 ~~~
 
-##### CSS
+### CSS
+
+Criação de variáveis globais para padronização de cores.
+~~~css
+:root {
+    --cor-principal: rgb(76, 108, 249);
+    --cor-header-lateral: rgb(35, 52, 129);
+    --fonte-principal: Arial;
+}
+~~~
 
 Aplicação de fonte, altura, largura e display flex para html e body. Padding na main.
 ~~~css
@@ -482,11 +576,19 @@ html{
     width: 100%;
 
 body {
-    font-family: Arial;
+    font-family: var(--fonte-principal);
     padding-top: 55px;
     width: 100%;
     display: flex;
+    flex-direction: column;
     position: relative;
+}
+
+/* VERSÂO MOBILE: adiciona espaço para barra do modal na parte inferior */
+@media (max-width: 600px) {
+    body {
+        padding-bottom: 30px;
+    }
 }
 ~~~
 
@@ -497,7 +599,7 @@ header{
     flex-direction: row;
     align-items: center;
     height: 55px;
-    background-color: rgb(35, 52, 129);
+    background-color: var(--cor-header-lateral);
     padding-left: 20px;
     position: fixed;
     top: 0;
@@ -520,7 +622,7 @@ i{
 }
 
 input{
-    background-color: rgb(35, 52, 129);
+    background-color: var(--cor-header-lateral);
     border: none;
     color: white;
     padding: 6px;
@@ -532,10 +634,50 @@ input::placeholder {
     color: white;
 }
 
-#Pesquisa{
+.pesquisa-desktop {
     display: flex;
     align-items: center;
     margin-left: auto;
+}
+
+.pesquisa-mobile {
+    display: none;
+}
+
+/* VERSÃO MOBILE: esconde barra de pesquisa de desktop e mostra a pesquisa na versão mobile */
+@media (max-width: 600px) {
+    .pesquisa-desktop {
+        display: none;
+    }
+
+    .pesquisa-mobile {
+        display: flex;
+        align-items: center;
+        background-color: color-mix(in srgb, var(--cor-header-lateral), transparent 80%);
+        padding: 15px 5px;
+        width: 100%;
+    }
+
+    .pesquisa-mobile i {
+        color: var(--cor-header-lateral);
+        margin-left: 15px;
+    }
+
+    .pesquisa-mobile input {
+        background-color: transparent;
+        border: none;
+        outline: none;
+        width: 100%;
+        margin-left: 10px;
+    }
+
+    input::placeholder {
+        color: var(--cor-header-lateral);;
+    }
+
+    input {
+        color: var(--cor-header-lateral);;
+    }
 }
 ~~~
 
@@ -545,10 +687,17 @@ Conteúdo principal (main).
     min-height: 85vh;
     display: flex;
     flex-direction: column;
+    padding: 20px;
+    padding-right: 40px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-main {
-    padding: 20px;
+/* VERSÃO MOBILE: diminui padding no lado direito da página (não existe barra fixa lateral) */
+@media (max-width: 600px) {
+    .conteudo {
+        padding-right: 20px;
+    }
 }
 ~~~
 
@@ -570,19 +719,89 @@ Seção lateral fixa (aside).
     transform: translateX(0);
 }
 
+/* VERSÃO MOBILE: ajusta barra de lista para parte inferior do site (modal) */
+@media (max-width: 600px) {
+    .secao-lateral {
+        top: auto;
+        bottom: 0px;
+        width: 80%;
+        height: 70vh;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        box-shadow: 0 -4px 15px var(--cor-header-lateral);
+        left: 50%;
+        right: auto;
+        transform: translateY(100%) translateX(-50%);
+    }
+
+    .secao-lateral.aberto {
+        transform: translateY(0) translateX(-50%);;
+    }
+}
+~~~
+
+Estilização do botão da aba lateral e rotaciona ícone chevron
+~~~css
+#toggle-lista i {
+    transform: rotate(0deg);
+    transition: transform 0.5s ease;
+}
+
+#toggle-lista:hover {
+    background-color: color-mix(in srgb, var(--cor-header-lateral), white 10%);
+}
+
+.secao-lateral.aberto #toggle-lista i {
+    transform: rotate(180deg);
+}
+
 .secao-lateral > button {
+    display: flex;
     position: absolute;
     font-size: 16px;
     margin-top: 20px;
     margin-right: 15px;
     right: 100%;
     border: none;
-    padding: 5px 15px;
-    background-color: rgb(35, 52, 129);
+    padding: 10px 15px;
+    background-color: var(--cor-header-lateral);
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
     color: white;
     height: 36px;
+    cursor: pointer;
+}
+
+/* VERSÃO MOBILE: ajusta posição e textos do botão (modal) */
+@media (max-width: 600px) {
+    .secao-lateral > button {
+        right: auto;
+        top: -40px;
+        left: 0;
+        margin-top: 0px;
+        margin-right: 0px;
+        border-top-right-radius: 10px;
+        border-bottom-left-radius: 0px;
+        width: 100%;
+        height: 45px;
+        padding: 20;
+    }
+
+    #toggle-lista {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #toggle-lista i {
+        transform: rotate(90deg);
+        transition: transform 0.5s ease;
+    }
+
+    .secao-lateral.aberto #toggle-lista i {
+        transform: rotate(-90deg);
+    }
 }
 ~~~
 
@@ -597,7 +816,7 @@ Lista de itens selecionados (dentro da barra lateral fixa).
     width: 300px;
     padding: 20px;
     overflow-y: auto;
-    background-color: rgb(35, 52, 129);
+    background-color: var(--cor-header-lateral);
 }
 
 .vazio {
@@ -606,6 +825,8 @@ Lista de itens selecionados (dentro da barra lateral fixa).
 }
 
 .rodape-lista {
+    display: flex;
+    justify-content: flex-end;
     margin-top: auto;
     padding-bottom: 20px;
     border-top: 1px solid white;
@@ -626,7 +847,7 @@ Lista de itens selecionados (dentro da barra lateral fixa).
     justify-content: space-between; 
     padding: 10px;
     margin-bottom: 20px;
-    background-color: rgb(76, 108, 249); 
+    background-color: var(--cor-principal); 
     border-radius: 16px;
     color: white;
     gap: 15px;
@@ -645,6 +866,20 @@ Lista de itens selecionados (dentro da barra lateral fixa).
     flex-direction: column;
     gap: 20px;
 }
+
+/* VERSÃO MOBILE: ajustar dimensões da lista de itens selecionados */
+@media (max-width: 600px) {
+    .lista {
+        width: 100%;
+        height: 100%; 
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    .rodape-lista {
+        justify-content: center;
+    }
+}
 ~~~
 
 Alterar quantidade de itens.
@@ -661,7 +896,12 @@ Alterar quantidade de itens.
     border: none;
     border-radius: 4px;
     color: white;
-    background-color: rgb(35, 52, 129);
+    background-color: var(--cor-header-lateral);
+}
+
+.controle-quantidade button:hover {
+    cursor: pointer;
+    background-color: color-mix(in srgb, var(--cor-header-lateral), white 10%);
 }
 ~~~
 
@@ -672,6 +912,10 @@ Seção de Produtos Mais Populares.
 .titulo { 
     padding: 20px 0px;
     font-size: 24pt;
+}
+
+.categorias-mobile {
+    display: none;
 }
 
 .categorias{
@@ -689,7 +933,7 @@ Seção de Produtos Mais Populares.
 }
 
 .categorias li{
-    background-color: #2C3E50;
+    background-color: color-mix(in srgb, var(--cor-header-lateral), transparent 80%);
     color: white;
     font-size: 12pt;
     padding: 5px 20px;
@@ -700,8 +944,36 @@ Seção de Produtos Mais Populares.
 }
 
 li.filtro-ativo {
-    background-color: #549ee9;
+    background-color: var(--cor-header-lateral);
     color: black;
+}
+
+/* VERSÃO MOBILE: diminui tamanho da fonte do título e altera seleção de categorias (dropdown menu) */
+@media (max-width: 600px) {
+    .titulo {
+        font-size: 18pt;
+    }
+
+    .categorias-desktop{
+        display: none;
+    }
+
+    .categorias-mobile {
+        display: flex;
+        padding-bottom: 20px;
+        border: 1x solid var(--cor-header-lateral);
+
+    }
+
+    .categorias-mobile select {
+        width: 100%;
+        border-radius: 10px 10px 0px 0px;
+        border: 1px solid var(--cor-header-lateral);
+        background-color: color-mix(in srgb, var(--cor-principal), transparent 90%);;
+        padding: 8px 10px;
+        font-size: 12pt;
+        color: var(--cor-header-lateral);
+    }
 }
 ~~~
 
@@ -721,15 +993,15 @@ Lista de produtos (seção).
     display: flex;
     flex-direction: column;
     align-items: left;
-    background-color: rgb(76, 108, 249);
+    background-color: var(--cor-principal);
     min-height: 220px;
     min-width: 140px;
     max-width: 120px;
     border-radius: 15px;
     margin-right: 30px;
-    padding-bottom: 10px;
+    padding-bottom: 5px;
     cursor: pointer;
-    border: 1px solid rgb(76, 108, 249);
+    border: 1px solid var(--cor-principal);
     position: relative;
 }
 
@@ -740,9 +1012,9 @@ Lista de produtos (seção).
     object-fit: contain;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
-    background-color: rgb(255, 255, 255);
+    background-color: white;
     padding: 10px 0px;
-    box-shadow: 0px 1px 2px rgb(76, 108, 249);
+    box-shadow: 0px 1px 2px var(--cor-principal);
 }
 
 .info-produto {
@@ -818,9 +1090,9 @@ Seção de Mercados - Lista de Mercados.
     height: 100px;
     object-fit: contain;
     border-radius: 30px;
-    background-color: rgb(255, 255, 255);
+    background-color: white;
     padding: 20px 10px;
-    box-shadow: 0px 0px 16px rgb(76, 108, 249);
+    box-shadow: 0px 0px 16px var(--cor-principal);
     margin-bottom: 20px;
 }
 
@@ -831,7 +1103,7 @@ Seção de Mercados - Lista de Mercados.
 }
 ~~~
 
-##### Página do Produto
+##### Página de Produto
 
 ~~~css
 .pagina-detalhes {
@@ -863,27 +1135,84 @@ Seção de Mercados - Lista de Mercados.
     margin: 0px;
     color: black;
 }
+
+.link-home:hover  {
+    cursor: pointer;
+    text-decoration: underline;
+}
 ~~~
 
 Seção do Produto (nome e imagem).
 ~~~css
 .pagina-detalhes > h1{
-    font-size: 40px;
+    display: flex;
+    font-size: 24pt;
     font-weight: bolder;
     margin-bottom: 20px;
+    white-space: normal;
+    overflow-wrap: break-word;
 }
 
 .pagina-produto {
     display: flex;
+    align-items: flex-start;
+    flex: 1 1 0;
+    gap: 5%;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
-.pagina-produto > img {
+/* VERSÃO MOBILE: centraliza e diminui tamanho da fonte do título e alinha produtos no centro da página */
+@media (max-width: 600px) {
+    .pagina-detalhes > h1{
+        font-size: 20pt;
+        justify-content: center;
+    }
+
+    .pagina-produto {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+~~~
+
+Imagem do produto.
+~~~css
+.imagem-produto {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
     border: 2px solid black;
-    max-height: 400px;
-    object-fit: contain;
-    max-width: 400px;
-    padding: 10px;
     border-radius: 16px;
+    background-color: white;
+    flex: 1 2 250px;
+    width: calc(100% - 320px);
+    max-width: 250px;
+    min-width: 100px;
+    aspect-ratio: 1 / 1;
+    box-sizing: border-box;
+}
+
+.imagem-produto img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+/* VERSÃO MOBILE: largura do container do produto pega a largura disponível da tela e alinhamento vertical de produtos */
+@media (max-width: 600px) {
+    .imagem-produto {
+        width: 100%;
+    }
+
+    .pagina-produto {
+        flex-direction: column;
+        align-items: center;
+    }
 }
 ~~~
 
@@ -892,25 +1221,44 @@ Lista de mercados com o produto disponível.
 .lista-mercados {
     display: flex;
     flex-direction: column;
-    margin-top: 20px;
-    margin-left: 100px;
-    width: calc(25vw - 55px);
+    flex: 1 1 60%;
+    min-width: 200px;
+    gap: 10px;
+    max-width: 100%;
+    margin-right: 10px;
 }
 
 .produto-mercado {
-    margin: 0px 20px;
     margin-bottom: 40px;
     padding: 10px 12px;
-    height: 100px;
-    width: 800px;
-    max-width: calc(60vw - 55px);
+    height: auto;
+    min-width: 280px;
+    max-width: 800px;
     border-radius: 16px;
     display: flex;
     align-items: center;
-    background-color: rgba(76, 108, 249, 0.8);
+    background-color: color-mix(in srgb, var(--cor-principal), transparent 20%);
     color: white;
-    box-shadow: 3px 4px 2px rgb(76, 108, 249);
+    box-shadow: 3px 4px 2px var(--cor-principal);
     position: relative;
+}
+
+/* VERSÃO MOBILE: lista de produtos dos mercados cresce verticalmente e é definida largura mínima para card */
+@media (max-width: 600px) {
+    .lista-mercados {
+        max-height: none;
+        width: 100%;
+        margin-right: 5px;
+        max-height: none;
+        overflow-y: visible;
+        flex-grow: 1;
+    }
+
+    .produto-mercado {
+        flex: 1 1 auto;
+        min-width: 200px;
+        margin-bottom: 10px;
+    }
 }
 ~~~
 
@@ -927,7 +1275,7 @@ Imagem e informações.
 }
 
 .produto-conteudo {
-    font-size: 16px;
+    font-size: 12pt;
     font-weight: 600;
     display: flex;
     flex-direction: column;
@@ -936,7 +1284,25 @@ Imagem e informações.
 }
 
 .produto-preco {
-    font-size: 32px;
+    padding-top: 20px;
+    font-size: 23pt;
+}
+
+/* VERSÃO MOBILE:  diminui tamanho da imagem do mercado no card e fonte dos textos */
+@media (max-width: 600px) {
+    .produto-mercado img {
+        height: 50px;
+        width: 50px;
+    }
+
+    .produto-conteudo {
+        font-size: 10pt;
+    }
+
+    .produto-preco {
+        padding-top: 14px;
+        font-size: 19pt;
+    }
 }
 ~~~
 
@@ -963,72 +1329,73 @@ Botão de adicionar a lista dentro da página do produto.
 ~~~css
 .pagina-mercado {
     display: flex;
+    gap: 80px;
+    width: 100%;
+}
+
+/* VERSÃO MOBILE: página organizada verticalmente e gap entre itens é reduzido */
+@media (max-width: 600px) {
+    .pagina-mercado {
+        flex-direction: column;
+        gap: 30px;
+    }
 }
 ~~~
 
-Imagem e lista de produtos.
+Imagem e informações do mercado.
 ~~~css
-.pagina-mercado > img {
-    border: 2px solid black;
-    max-height: 400px;
-    object-fit: contain;
-    max-width: 400px;
-    padding: 10px;
-    border-radius: 16px;
-}
-
-.lista-produtos {
-    display: flex;
-    flex-direction: column;
-    margin-top: 20px;
-    margin-left: 100px;
-    width: calc(25vw - 55px);
-}
-~~~
-
-Imagem e informações do produto (card)
-~~~css
-.produto-aba {
-    margin: 0px 20px;
-    margin-bottom: 40px;
-    padding: 10px 12px;
-    height: 100px;
-    width: 800px;
-    max-width: calc(60vw - 55px);
-    border-radius: 16px;
+.imagem-mercado {
     display: flex;
     align-items: center;
-    background-color: rgba(76, 108, 249, 0.8);
-    color: white;
-    box-shadow: 3px 4px 2px rgb(76, 108, 249);
-    position: relative;
+    justify-content: center;
+    padding: 20px;
+    border: 2px solid black;
+    border-radius: 16px;
+    background-color: white;
+    flex: 1 1 250px;
+    width: 250px;
+    max-width: 250px;
+    min-width: 100px;
+    aspect-ratio: 1 / 1;
+    box-sizing: border-box;
 }
 
-.produto-aba img {
-    height: 80px;
-    width: 80px;
-    margin-right: 20px;
-    border-radius: 16px;
-    padding: 10px;
-    background-color: white;
+.imagem-mercado img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
     object-fit: contain;
+}
+
+.info-mercado > h1 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    margin-left: 5px;
+    font-size: 20pt;
+    font-weight: bold;
+    max-width: 100%;
+}
+
+.info-mercado > p {
+    margin-left: 5px;
+    font-size: 14pt;
+    max-width: 100%;
 }
 ~~~
 
-Botão de adicionar produto à lista.
+Categorias e lista de produtos.
 ~~~css
-.adicionar-mercado-local {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    border: none;
-    background-color: white;
-    height: 32px;
-    width: 32px;
-    border-radius: 6px;
+.produtos-mercado {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
 }
 
-.adicionar-mercado-local:hover {
-    opacity: 0.8;
+.produtos-mercado .categorias-desktop {
+    height: 60px;
+    width: 100%;
+    overflow-x: auto;
+    max-width: 100%;
 }
 ~~~
