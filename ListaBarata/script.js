@@ -109,21 +109,12 @@ produtos.forEach((p) => {
 // Renderizar Home Page
 
 function renderizarHome() {
+    mostrarPesquisa(true);
     const main = document.querySelector('.conteudo');
-    document.getElementById('Pesquisa').style.display = 'visible';
 
     main.innerHTML = `
         <article class="titulo">Produtos Mais Populares</article>
-        <section class="categorias">
-            <ul id="categorias-filtros">
-                <li data-categoria="Higiene e Perfumaria"> Higiene e Perfumaria </li>
-                <li data-categoria="Salgadinhos e Snacks"> Salgadinhos e Snacks </li>
-                <li data-categoria="Padaria e Matinais"> Padaria e Matinais </li>
-                <li data-categoria="Bebidas"> Bebidas </li>
-                <li data-categoria="Energéticos e Isotônicos"> Energéticos e Isotônicos </li>
-                <li data-categoria="Doces"> Doces </li>
-            </ul>
-        </section>
+        ${gerarCategorias()} 
         <section class="produtos">
             ${gerarCardsProdutos()} 
         </section>
@@ -138,14 +129,43 @@ function renderizarHome() {
     renderizarLista();
 }
 
+// Gerar categorias dos produtos
+function gerarCategorias() {
+    return `
+        <section class="categorias-desktop">
+            <ul id="categorias-filtros">
+                <li data-categoria="Todos"> Todos </li>
+                <li data-categoria="Higiene e Perfumaria"> Higiene e Perfumaria </li>
+                <li data-categoria="Salgadinhos e Snacks"> Salgadinhos e Snacks </li>
+                <li data-categoria="Padaria e Matinais"> Padaria e Matinais </li>
+                <li data-categoria="Bebidas"> Bebidas </li>
+                <li data-categoria="Energéticos e Isotônicos"> Energéticos e Isotônicos </li>
+                <li data-categoria="Doces"> Doces </li>
+            </ul>
+        </section>
+        <section class="categorias-mobile">
+            <select id="filtros-mobile">
+                <option value="Todos" selected>Todos</option>
+                <option value="Higiene e Perfumaria">Higiene e Perfumaria</option>
+                <option value="Salgadinhos e Snacks">Salgadinhos e Snacks</option>
+                <option value="Padaria e Matinais">Padaria e Matinais</option>
+                <option value="Bebidas">Bebidas</option>
+                <option value="Energéticos e Isotônicos">Energéticos e Isotônicos</option>
+                <option value="Doces">Doces</option>
+            </select>
+        </section>
+    `;
+}
+
 // Gerar seção de produtos da Home Page
 
-function gerarCardsProdutos(categoriaFiltro = "Todos") {
+function gerarCardsProdutos(categoriaFiltro = "Todos", listaBase = null) {
 
-    let listaFiltrada = produtos;
+    let listaParaFiltrar = (listaBase !== null) ? listaBase : produtos;
+    let listaFiltrada = listaParaFiltrar;
 
     if (categoriaFiltro !== "Todos") {
-        listaFiltrada = produtos.filter(p => p.categoria === categoriaFiltro);
+        listaFiltrada = listaParaFiltrar.filter(p => p.categoria === categoriaFiltro);
     }
 
     if (listaFiltrada.length === 0) return "<p>Nenhum produto encontrado nesta categoria.</p>";
@@ -181,6 +201,7 @@ function gerarCardsMercados() {
 // Renderizar Página de Produto
 
 function renderizarPaginaProduto(id) {
+    mostrarPesquisa(false);
     const main = document.querySelector('.conteudo');
 
     const produto = produtos.find(p => p.id === id);
@@ -197,7 +218,9 @@ function renderizarPaginaProduto(id) {
             </button>
             <h1>${produto.nome}</h1>
             <section class="pagina-produto">
-                <img src="${produto.imagem}">
+                <div class="imagem-produto">
+                    <img src="${produto.imagem}">
+                </div>
                 <section class="lista-mercados">
                     ${gerarMercadosDoProduto(produto.nome)}
                 </section>
@@ -211,6 +234,9 @@ function renderizarPaginaProduto(id) {
 // Gerar lista de mercados onde o produto esta disponível
 
 function gerarMercadosDoProduto(nome) {
+
+    //document.getElementById('Pesquisa').style.display = 'visible';
+    //document.getElementById('Pesquisa-Mobile').style.display = 'visible';
 
     const produto = produtos.find((p) => p.nome === nome);
 
@@ -236,6 +262,7 @@ function gerarMercadosDoProduto(nome) {
 
 // Renderizar Página do Mercado Específico
 function renderizarPaginaMercado(nomeMercado) {
+    mostrarPesquisa(true);
     const main = document.querySelector('.conteudo');
 
     // Encontra os dados do mercado clicado
@@ -269,17 +296,26 @@ function renderizarPaginaMercado(nomeMercado) {
                 Home <i class="fa-solid fa-chevron-right"></i> ${mercado.nome}
             </button>
             <section class="pagina-mercado">
-            <img src="${mercado.imagem}">   
-            <section class="lista-produtos">
-                ${gerarCardsProdutosLocal(produtosNesteMercado)}
+                <section class="info-mercado">
+                    <img src="${mercado.imagem}">
+                    <h1>${mercado.nome}</h1>
+                    <p>${mercado.endereco}</p>
+                </section>
+                <section class="produtos-mercado">
+                    <article class="titulo">Produtos Mais Populares</article>
+                    ${gerarCategorias()} 
+                    <section class="produtos">
+                        ${gerarCardsProdutos("Todos", produtosNesteMercado)} 
+                    </section>
+                </section>
             </section>
         </section>
-        <h1>${mercado.nome}</h1>
-        <p>${mercado.endereco}</p>
     `;
 
     // Ativa os botões de adicionar na lista para esta nova tela
-    configurarBotoesAdicionar('.adicionar-mercado-local');
+    configurarBotoesAdicionar('.adicionar-home');
+    configurarFiltros(produtosNesteMercado);
+    renderizarLista();
 }
 
 // Gerar cards de produtos para a página de um mercado específico
@@ -300,6 +336,15 @@ function gerarCardsProdutosLocal(listaProdutos) {
             </button>
         </article>
     `).join('');
+}
+
+function mostrarPesquisa(exibir) {
+    const pesquisaDesktop = document.getElementById('Pesquisa');
+    const pesquisaMobile = document.getElementById('Pesquisa-Mobile');
+    const estilo = exibir ? '' : 'none';
+
+    if (pesquisaDesktop) pesquisaDesktop.style.display = estilo;
+    if (pesquisaMobile) pesquisaMobile.style.display = estilo;
 }
 
 // Seleciona todos botões de adicionar com a informação do seletor (classe) e checa se
@@ -327,31 +372,54 @@ function configurarBotoesAdicionar(seletor) {
 
 // Pegar todas categorias e a seção de produtos para filtrar para seleção de alguma categoria
 
-function configurarFiltros() {
+function configurarFiltros(listaBase = null) {
 
-    const filtros = document.querySelectorAll('#categorias-filtros li');
+    const filtroDesktop = document.querySelectorAll('#categorias-filtros li');
+    const filtroMobile = document.querySelector('#filtros-mobile');
     const containerProdutos = document.querySelector('.produtos');
 
-    filtros.forEach(filtro => {
+    const executarFiltro = (categoria) => {
+        containerProdutos.innerHTML = gerarCardsProdutos(categoria, listaBase);
+        configurarBotoesAdicionar('.adicionar-home');
+        
+        if (filtroMobile) filtroMobile.value = categoria;
+    };
+
+    filtroDesktop.forEach(filtro => {
         filtro.onclick = () => {
 
             const jaAtivo = filtro.classList.contains('filtro-ativo');
-            
             let categoriaFiltro;
 
             if (jaAtivo) {
                 filtro.classList.remove('filtro-ativo');
                 categoriaFiltro = "Todos"; 
             } else {
-                filtros.forEach(f => f.classList.remove('filtro-ativo'));
+                filtroDesktop.forEach(f => f.classList.remove('filtro-ativo'));
                 filtro.classList.add('filtro-ativo');
                 categoriaFiltro = filtro.getAttribute('data-categoria');
             }
-            containerProdutos.innerHTML = gerarCardsProdutos(categoriaFiltro);
-
-            configurarBotoesAdicionar('.adicionar-home');
+            if (filtroMobile) { 
+                filtroMobile.value = categoriaFiltro;
+            }
+            executarFiltro(categoriaFiltro);
         };
     });
+
+    if (filtroMobile) {
+        filtroMobile.onchange = (e) => {
+            const categoriaSelecionada = e.target.value;
+
+            filtroDesktop.forEach(f => {
+                f.classList.remove('filtro-ativo');
+                if(f.getAttribute('data-categoria') === categoriaSelecionada) {
+                    f.classList.add('filtro-ativo');
+                }
+            });
+
+            executarFiltro(categoriaSelecionada);
+        };
+    }
 }
 
 // Adicionar itens à lista (rejeita se já foi adicionado)

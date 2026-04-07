@@ -15,15 +15,22 @@
         <h3> Lista Barata </h3>
         <i class="fa solid fa-location-dot"></i>
         <h3> São Paulo </h3>
-        <form id="Pesquisa">
+        <form id="Pesquisa" class="pesquisa-desktop">
             <i class="fa fa-search icon"></i>
             <input type="text" placeholder="Pesquisar...">
         </form>
     </header>
+    <form id="Pesquisa-Mobile" class="pesquisa-mobile">
+        <i class="fa fa-search icon"></i>
+        <input type="text" placeholder="Pesquisar...">
+    </form>
     <main class="conteudo">
     </main>
     <aside class="secao-lateral">
-        <button>Lista</button>
+        <button id="toggle-lista"> 
+            <i class="fa-solid fa-chevron-left"></i> 
+            Lista
+        </button>
         <section class="lista">
             <ul id="lista-itens">
             </ul>
