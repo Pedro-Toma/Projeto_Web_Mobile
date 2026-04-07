@@ -214,7 +214,7 @@ function renderizarPaginaProduto(id) {
     main.innerHTML = `
         <section class="pagina-detalhes">
             <button onclick="renderizarHome()" class="voltar">
-                Home <i class="fa-solid fa-chevron-right"></i> ${produto.nome}
+                <span class="link-home">Home</span> <i class="fa-solid fa-chevron-right"></i> ${produto.nome}
             </button>
             <h1>${produto.nome}</h1>
             <section class="pagina-produto">
@@ -234,9 +234,6 @@ function renderizarPaginaProduto(id) {
 // Gerar lista de mercados onde o produto esta disponível
 
 function gerarMercadosDoProduto(nome) {
-
-    //document.getElementById('Pesquisa').style.display = 'visible';
-    //document.getElementById('Pesquisa-Mobile').style.display = 'visible';
 
     const produto = produtos.find((p) => p.nome === nome);
 
@@ -265,7 +262,6 @@ function renderizarPaginaMercado(nomeMercado) {
     mostrarPesquisa(true);
     const main = document.querySelector('.conteudo');
 
-    // Encontra os dados do mercado clicado
     const mercado = mercados.find(m => m.nome === nomeMercado);
 
     if (!mercado) {
@@ -273,15 +269,12 @@ function renderizarPaginaMercado(nomeMercado) {
         return;
     }
 
-    // Busca todos os produtos que possuem uma oferta neste mercado específico
     let produtosNesteMercado = [];
     
     produtos.forEach(produto => {
         const ofertaNoMercado = produto.ofertas.find(oferta => oferta.loja === nomeMercado);
         
         if (ofertaNoMercado) {
-            // Criamos uma cópia do produto para não alterar o preço global,
-            // definindo o preço específico que este mercado cobra.
             produtosNesteMercado.push({
                 ...produto,
                 precoLocal: ofertaNoMercado.preco 
@@ -293,11 +286,13 @@ function renderizarPaginaMercado(nomeMercado) {
     main.innerHTML = `
         <section class="pagina-detalhes">
             <button onclick="renderizarHome()" class="voltar">
-                Home <i class="fa-solid fa-chevron-right"></i> ${mercado.nome}
+                <span class="link-home">Home</span> <i class="fa-solid fa-chevron-right"></i> ${mercado.nome}
             </button>
             <section class="pagina-mercado">
                 <section class="info-mercado">
-                    <img src="${mercado.imagem}">
+                    <div class="imagem-mercado">
+                        <img src="${mercado.imagem}">
+                    </div>
                     <h1>${mercado.nome}</h1>
                     <p>${mercado.endereco}</p>
                 </section>
@@ -318,26 +313,7 @@ function renderizarPaginaMercado(nomeMercado) {
     renderizarLista();
 }
 
-// Gerar cards de produtos para a página de um mercado específico
-function gerarCardsProdutosLocal(listaProdutos) {
-    if (listaProdutos.length === 0) return "<p>Nenhum produto cadastrado neste mercado.</p>";
-
-    return listaProdutos.map(produto => `
-        <article class="produto-aba">
-            <img src="${produto.imagem}" onclick="renderizarPaginaProduto(${produto.id})">
-            <section class="produto-conteudo">
-                <p> ${produto.nome} </p>
-                <p class="produto-preco"> R$ ${produto.precoLocal.toFixed(2).replace('.', ',')} </p>
-            </section>
-            <button class="adicionar-mercado-local" 
-                data-nome="${produto.nome}" 
-                data-preco="${produto.precoLocal}" 
-                data-imagem="${produto.imagem}">&plus;
-            </button>
-        </article>
-    `).join('');
-}
-
+// Altera a visualização da barra de pesquisa para cada versão
 function mostrarPesquisa(exibir) {
     const pesquisaDesktop = document.getElementById('Pesquisa');
     const pesquisaMobile = document.getElementById('Pesquisa-Mobile');
@@ -467,11 +443,14 @@ function renderizarLista() {
     
     let somaTotal = 0;
     container.innerHTML = "";
-    
+
     if (minhaLista.length === 0) {
         container.innerHTML = '<p class="vazio">Adicione Itens à Lista......</p>';
         precoTotalElemento.innerHTML = "Total: R$ 0,00";
     } else {
+
+        const fragmento = document.createDocumentFragment();
+
         minhaLista.forEach((produto, indice) => {
 
             const quantidade = produto.quantidade || 1;
@@ -479,22 +458,25 @@ function renderizarLista() {
 
             somaTotal += subtotal;
             
-            const itemHTML = `
-                <li class="produto-lista"> 
-                    <img src="${produto.imagem}">
-                    <article class="produto-info-lista">
-                        <p> ${produto.nome} </p>
-                        <p class-> R$ ${(produto.preco * quantidade).toFixed(2).replace('.', ',')} </p>
-                    </article>
-                    <section class="controle-quantidade">
-                        <button onclick="alterarQuantidade(${indice}, 1)">&plus;</button>
-                        <p> ${quantidade} </p>
-                        <button onclick="alterarQuantidade(${indice}, -1)">&minus;</button>
-                    </section>
-                </li>
-                `;
-            container.innerHTML += itemHTML;
+            const li = document.createElement('li');
+            li.className = 'produto-lista';
+
+            li.innerHTML = `
+                <img src="${produto.imagem}">
+                <article class="produto-info-lista">
+                    <p> ${produto.nome} </p>
+                    <p class-> R$ ${(produto.preco * quantidade).toFixed(2).replace('.', ',')} </p>
+                </article>
+                <section class="controle-quantidade">
+                    <button onclick="alterarQuantidade(${indice}, 1)">&plus;</button>
+                    <p> ${quantidade} </p>
+                    <button onclick="alterarQuantidade(${indice}, -1)">&minus;</button>
+                </section>
+            `;
+            fragmento.appendChild(li);
         });
+        container.appendChild(fragmento);
+        
         precoTotalElemento.innerHTML = `Total: R$ ${somaTotal.toFixed(2).replace('.', ',')}`;
     }
 }

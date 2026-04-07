@@ -175,6 +175,10 @@ input::placeholder {
     transition: transform 0.5s ease;
 }
 
+#toggle-lista:hover {
+    background-color: color-mix(in srgb, var(--cor-header-lateral), white 10%);
+}
+
 .secao-lateral.aberto #toggle-lista i {
     transform: rotate(180deg);
 }
@@ -246,6 +250,8 @@ input::placeholder {
 }
 
 .rodape-lista {
+    display: flex;
+    justify-content: flex-end;
     margin-top: auto;
     padding-bottom: 20px;
     border-top: 1px solid white;
@@ -293,6 +299,10 @@ input::placeholder {
         padding: 20px;
         box-sizing: border-box;
     }
+
+    .rodape-lista {
+        justify-content: center;
+    }
 }
 
 /* Alterar quantidade de itens */
@@ -312,6 +322,10 @@ input::placeholder {
     background-color: var(--cor-header-lateral);
 }
 
+.controle-quantidade button:hover {
+    cursor: pointer;
+    background-color: color-mix(in srgb, var(--cor-header-lateral), white 10%);
+}
 /* Seção de Produtos Mais Populares */
 
 .titulo { 
@@ -402,7 +416,7 @@ li.filtro-ativo {
     max-width: 120px;
     border-radius: 15px;
     margin-right: 30px;
-    padding-bottom: 10px;
+    padding-bottom: 5px;
     cursor: pointer;
     border: 1px solid var(--cor-principal);
     position: relative;
@@ -436,17 +450,6 @@ li.filtro-ativo {
     font-size: 20px;
 }
 
-@media (max-width: 600px) {
-    .produtos {
-        height: 250px;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        overflow-x: auto;
-        margin-bottom: 30px;
-    }
-    
-}
 
 /* Botão para adicionar a lista (barra lateral) */
 
@@ -515,7 +518,7 @@ li.filtro-ativo {
     font-weight: 600;
 }
 
-/* Página do Produto */
+/* Página de Produto */
 
 .pagina-detalhes {
     display: flex;
@@ -544,6 +547,11 @@ li.filtro-ativo {
     padding: 0px 20px;
     margin: 0px;
     color: black;
+}
+
+.link-home:hover  {
+    cursor: pointer;
+    text-decoration: underline;
 }
 
 /* Seção do Produto */
@@ -611,7 +619,6 @@ li.filtro-ativo {
 @media (max-width: 600px) {
     .imagem-produto {
         width: 100%;
-        flex: 1 1 250px;
     }
 
     .pagina-produto {
@@ -727,21 +734,41 @@ li.filtro-ativo {
 
 .pagina-mercado {
     display: flex;
+    gap: 80px;
+    width: 100%;
 }
 
-/* Imagem */
-
-.info-mercado {
-    margin-right: 100px;
+@media (max-width: 600px) {
+    .pagina-mercado {
+        flex-direction: column;
+        gap: 30px;
+    }
 }
 
-.info-mercado > img {
+/* Imagem e informações do mercado */
+
+.imagem-mercado {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
     border: 2px solid black;
-    height: 250px;
-    width: 250px;
-    object-fit: contain;
-    padding: 10px;
     border-radius: 16px;
+    background-color: white;
+    flex: 1 1 250px;
+    width: 250px;
+    max-width: 250px;
+    min-width: 100px;
+    aspect-ratio: 1 / 1;
+    box-sizing: border-box;
+}
+
+.imagem-mercado img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
 }
 
 .info-mercado > h1 {
@@ -750,64 +777,26 @@ li.filtro-ativo {
     margin-left: 5px;
     font-size: 20pt;
     font-weight: bold;
-    max-width: 100px;
+    max-width: 100%;
 }
 
 .info-mercado > p {
     margin-left: 5px;
     font-size: 14pt;
-    max-width: 250px;
+    max-width: 100%;
+}
+
+/* Categorias e lista de produtos */
+
+.produtos-mercado {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
 }
 
 .produtos-mercado .categorias-desktop {
     height: 60px;
     width: 100%;
     overflow-x: auto;
-    max-width: calc(100vw - 450px);
+    max-width: 100%;
 }
-
-/* Imagem e informações do produto */
-
-.produto-aba {
-    margin: 0px 20px;
-    margin-bottom: 40px;
-    padding: 10px 12px;
-    height: 100px;
-    width: 800px;
-    max-width: calc(60vw - 55px);
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    background-color: color-mix(in srgb, var(--cor-principal), transparent 20%);
-    color: white;
-    box-shadow: 3px 4px 2px var(--cor-principal);
-    position: relative;
-}
-
-.produto-aba img {
-    height: 80px;
-    width: 80px;
-    margin-right: 20px;
-    border-radius: 16px;
-    padding: 10px;
-    background-color: white;
-    object-fit: contain;
-}
-
-/* Adição de produto do mercado específico */
-
-.adicionar-mercado-local {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    border: none;
-    background-color: white;
-    height: 32px;
-    width: 32px;
-    border-radius: 6px;
-}
-
-.adicionar-mercado-local:hover {
-    opacity: 0.8;
-}
-
